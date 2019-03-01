@@ -5,10 +5,10 @@ from os import path, getcwd
 
 
 
-base_dir= getcwd() + '\\invoices\\DigitalOcean\\'
+base_dir= getcwd() + '\\invoices\\bol.com\\'
 print(base_dir)
-user = "tymo@productbuilder.ai"
-pwd = "Scrape123"
+user = "timothy@octochannel.com"
+pwd = "ORdiadoslyxNaH1"
 
 profile = webdriver.FirefoxProfile()
 profile.set_preference("browser.download.dir",base_dir)
@@ -27,64 +27,33 @@ profile.set_preference("pdfjs.disabled", True)
 
 
 driver = webdriver.Firefox(firefox_profile=profile, executable_path='C:/Users/tymo.dekock/Documents/Stage/Gecko/geckodriver.exe')
-
-driver.get("https://cloud.digitalocean.com/login")
-assert "DigitalOcean" in driver.title
-elem = driver.find_element_by_id("user_email")
+driver.get('https://www.bol.com/nl/')
+time.sleep(3)
+assert "bol.com | de winkel van ons allemaal" in driver.title
+try:
+    elem = driver.find_element_by_class_name("js_close_modal_window")
+    elem.click()
+except:
+    print("no overlay")
+time.sleep(2)
+elem = driver.find_element_by_class_name("account-button")
+elem.click()
+time.sleep(1)
+elem = driver.find_element_by_id("login_email")
 for i in range(0, len(user)):
     elem.send_keys(user[i])
     time.sleep(0.25)
-elem = driver.find_element_by_id("user_password")
+elem = driver.find_element_by_id("login_password")
 for i in range(0, len(pwd)):
     elem.send_keys(pwd[i])
     time.sleep(0.25)
-elem.send_keys(Keys.RETURN)
-time.sleep(30)
-driver.get("https://cloud.digitalocean.com/account/billing")
-time.sleep(10)
-assert "DigitalOcean - Account" in driver.title
-print(driver.current_url)
-elem = driver.find_element_by_xpath("//td[@class='invoice']/a")
+elem = driver.find_element_by_class_name("c-btn-primary--large")
 elem.click()
-time.sleep(3)
-print(driver.current_url)
+driver.get('https://www.bol.com/nl/rnwy/account/facturen')
 
-elem = driver.find_element_by_class_name("Button--blue")
-elem.click()
-time.sleep(0.5)
-print(driver.current_url)
-
-elem = driver.find_element_by_partial_link_text("PDF").get_attribute("href")
-requesturl = elem
+elems = driver.find_elements_by_class_name('sb-pdf')
+for elem in elems:
+    elem.click()
+    time.sleep(1)
 
 
-cookies = driver.get_cookies()
-
-driver.get(elem)
-time.sleep(0.7)
-elem = driver.find_element_by_id("download")
-elem.click()
-
-driver.close()
-
-'''
-s = requests.Session()
-
-for cookie in cookies:
-    print(cookie)
-    try:
-        s.cookies.set(cookie['name'], cookie['value'], path=cookie['path'], domain=cookie['domain'], secure=cookie['secure'], expires=cookie['expiry'])
-    except KeyError:
-        s.cookies.set(cookie['name'], cookie['value'], path=cookie['path'], domain=cookie['domain'], secure=cookie['secure'])
-
-print(s.cookies)
-response = s.get(requesturl)
-with open(base_dir+ 'oceanInvoice.pdf', 'wb') as pdf:
-    pdf.write(response.content)
-
-# soup = BeautifulSoup(content)
-# print(soup)
-
-# TODO: Figure out a way to download pdfs
-# Try requests with cookies we got from seleniums
-'''
