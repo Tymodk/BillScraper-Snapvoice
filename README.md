@@ -4,8 +4,17 @@ The start of the repo that'll make gathering your invoices and bills easier than
 
 ## Digital Ocean
 
-Digitalocean.com -> login -> username > password -> button to log in  
--> billing -> view details -> view invoice > save as?  
+Works, though some problems with two step verification  
+
+## Bol.com
+  
+Works, no issues.
+  
+## Coolblue
+
+Works, partially.  Need to figure out which are from company though  
+  
+TODO: Pagination  
 
 ## Thoughts  
 
