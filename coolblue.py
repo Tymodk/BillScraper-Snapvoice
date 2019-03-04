@@ -2,13 +2,15 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import time
 from os import path, getcwd
-
+from dotenv import load_dotenv
+load_dotenv()
+import os
 
 
 base_dir= getcwd() + '\\invoices\\coolblue\\'
 print(base_dir)
-user = "yannig.bourgeois@hotmail.com"
-pwd = "e8YooJ^wQjt8%GU"
+user = os.getenv("COOLUSER")
+pwd = os.getenv("COOLPASSWORD")
 
 profile = webdriver.FirefoxProfile()
 profile.set_preference("browser.download.dir",base_dir)

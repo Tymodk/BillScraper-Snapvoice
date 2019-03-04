@@ -2,13 +2,14 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import time
 from os import path, getcwd
-
-
+from dotenv import load_dotenv
+load_dotenv()
+import os
 
 base_dir= getcwd() + '\\invoices\\DigitalOcean\\'
 print(base_dir)
-user = "tymo@productbuilder.ai"
-pwd = "Scrape123"
+user = os.getenv("OCEANUSER")
+pwd = os.getenv("OCEANPASSWORD")
 
 profile = webdriver.FirefoxProfile()
 profile.set_preference("browser.download.dir",base_dir)
