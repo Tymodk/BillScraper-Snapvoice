@@ -45,47 +45,17 @@ driver.get("https://cloud.digitalocean.com/account/billing")
 time.sleep(10)
 assert "DigitalOcean - Account" in driver.title
 print(driver.current_url)
-elem = driver.find_element_by_xpath("//td[@class='invoice']/a")
-elem.click()
-time.sleep(3)
-print(driver.current_url)
-
-elem = driver.find_element_by_class_name("Button--blue")
-elem.click()
-time.sleep(0.5)
-print(driver.current_url)
-
-elem = driver.find_element_by_partial_link_text("PDF").get_attribute("href")
-requesturl = elem
-
-
-cookies = driver.get_cookies()
-
-driver.get(elem)
-time.sleep(0.7)
-elem = driver.find_element_by_id("download")
-elem.click()
-
+elems = driver.find_elements_by_xpath("//td[@class='invoice']/a")
+for i in range(0, len(elems)):
+    elems = driver.find_elements_by_xpath("//td[@class='invoice']/a")
+    elems[i].click()
+    time.sleep(3)
+    elem = driver.find_element_by_class_name("Button--blue")
+    elem.click()
+    time.sleep(0.5)
+    elem = driver.find_element_by_partial_link_text("PDF")
+    elem.click()
+    driver.get("https://cloud.digitalocean.com/account/billing")
+    time.sleep(10)
+    assert "DigitalOcean - Account" in driver.title
 driver.close()
-
-'''
-s = requests.Session()
-
-for cookie in cookies:
-    print(cookie)
-    try:
-        s.cookies.set(cookie['name'], cookie['value'], path=cookie['path'], domain=cookie['domain'], secure=cookie['secure'], expires=cookie['expiry'])
-    except KeyError:
-        s.cookies.set(cookie['name'], cookie['value'], path=cookie['path'], domain=cookie['domain'], secure=cookie['secure'])
-
-print(s.cookies)
-response = s.get(requesturl)
-with open(base_dir+ 'oceanInvoice.pdf', 'wb') as pdf:
-    pdf.write(response.content)
-
-# soup = BeautifulSoup(content)
-# print(soup)
-
-# TODO: Figure out a way to download pdfs
-# Try requests with cookies we got from seleniums
-'''

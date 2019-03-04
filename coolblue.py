@@ -47,12 +47,22 @@ elems[1].click()
 driver.get('https://www.coolblue.be/nl/mijn-coolblue-account/orderoverzicht')
 time.sleep(1)
 assert "Mijn bestellingen - Coolblue - alles voor een glimlach" in driver.title
-elems = driver.find_elements_by_class_name("js-view-order-modal-trigger")
-for elem in elems:
-    elem.click()
-    time.sleep(5)
-    modalelem = driver.find_element_by_partial_link_text("Factuur")
-    modalelem.click()
-    modalelem.send_keys(Keys.ESCAPE)
-driver.close()
+
+while 1:
+    try:
+        elems = driver.find_elements_by_class_name("order-row")
+        for elem in elems:
+            elem.click()
+            time.sleep(5)
+            modalelem = driver.find_element_by_partial_link_text("Factuur")
+            modalelem.click()
+            modalelem.send_keys(Keys.ESCAPE)
+        next = driver.find_element_by_partial_link_text("Volgende")
+        next.click()
+        time.sleep(5)
+    except:
+        print('Closing...')
+        driver.close()
+
+
 
