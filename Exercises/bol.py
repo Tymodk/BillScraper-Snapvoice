@@ -27,35 +27,34 @@ profile.set_preference("browser.download.manager.showAlertOnComplete", False)
 profile.set_preference("browser.download.manager.closeWhenDone", True)
 profile.set_preference("pdfjs.disabled", True)
 
-
-driver = webdriver.Firefox(firefox_profile=profile, executable_path='C:/Users/tymo.dekock/Documents/Stage/Gecko/geckodriver.exe')
-driver.get('https://www.bol.com/nl/')
-time.sleep(3)
-assert "bol.com | de winkel van ons allemaal" in driver.title
-try:
-    elem = driver.find_element_by_class_name("js_close_modal_window")
-    elem.click()
-except:
-    print("no overlay")
-time.sleep(2)
-elem = driver.find_element_by_class_name("account-button")
-elem.click()
-time.sleep(1)
-elem = driver.find_element_by_id("login_email")
-for i in range(0, len(user)):
-    elem.send_keys(user[i])
-    time.sleep(0.25)
-elem = driver.find_element_by_id("login_password")
-for i in range(0, len(pwd)):
-    elem.send_keys(pwd[i])
-    time.sleep(0.25)
-elem = driver.find_element_by_class_name("c-btn-primary--large")
-elem.click()
-driver.get('https://www.bol.com/nl/rnwy/account/facturen')
-
-elems = driver.find_elements_by_class_name('sb-pdf')
-for elem in elems:
+def scrapeBol(user, pwd):
+    driver = webdriver.Firefox(firefox_profile=profile, executable_path='C:/Users/tymo.dekock/Documents/Stage/Gecko/geckodriver.exe')
+    driver.get('https://www.bol.com/nl/')
+    time.sleep(3)
+    assert "bol.com | de winkel van ons allemaal" in driver.title
+    try:
+        elem = driver.find_element_by_class_name("js_close_modal_window")
+        elem.click()
+    except:
+        print("no overlay")
+    time.sleep(2)
+    elem = driver.find_element_by_class_name("account-button")
     elem.click()
     time.sleep(1)
+    elem = driver.find_element_by_id("login_email")
+    for i in range(0, len(user)):
+        elem.send_keys(user[i])
+        time.sleep(0.25)
+    elem = driver.find_element_by_id("login_password")
+    for i in range(0, len(pwd)):
+        elem.send_keys(pwd[i])
+        time.sleep(0.25)
+    elem = driver.find_element_by_class_name("c-btn-primary--large")
+    elem.click()
+    driver.get('https://www.bol.com/nl/rnwy/account/facturen')
 
+    elems = driver.find_elements_by_class_name('sb-pdf')
+    for elem in elems:
+        elem.click()
+        time.sleep(1)
 
