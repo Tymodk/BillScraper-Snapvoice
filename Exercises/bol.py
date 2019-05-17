@@ -2,15 +2,12 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import time
 from os import path, getcwd
-from dotenv import load_dotenv
-load_dotenv()
 import os
 
 
 base_dir= getcwd() + '\\invoices\\bol.com\\'
 print(base_dir)
-user = os.getenv("BOLUSER")
-pwd = os.getenv("BOLPASSWORD")
+
 
 profile = webdriver.FirefoxProfile()
 profile.set_preference("browser.download.dir",base_dir)

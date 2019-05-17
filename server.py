@@ -14,7 +14,7 @@ app = Flask(__name__, template_folder='./views')
 def pageStart():
     return render_template('index.html')  
 
-@app.route("/bolscraper/<username>/<password>")
+@app.route("/bolcomscraper/<username>/<password>")
 def appStartBol(username, password):
     try:
         scrapeBol(username, password)
@@ -22,7 +22,7 @@ def appStartBol(username, password):
     except:
         return jsonify({'success': False})
 
-@app.route("/coolscraper/<username>/<password>")
+@app.route("/coolbluescraper/<username>/<password>")
 def appStartCool(username, password):
     try:
         scrapeCool(username, password)
