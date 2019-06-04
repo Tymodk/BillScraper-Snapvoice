@@ -14,18 +14,22 @@ app = Flask(__name__, template_folder='./views')
 def pageStart():
     return render_template('index.html')  
 
-@app.route("/bolcomscraper/<username>/<password>")
-def appStartBol(username, password):
+@app.route("/bolcomscraper/", methods=['POST'])
+def appStartBol():
+    data = request.data.decode("utf-8") 
+    data = json.loads(data)
     try:
-        scrapeBol(username, password)
+        scrapeBol(data['username'], data['password'], data['userId'])      
         return jsonify({'success': True})
     except:
         return jsonify({'success': False})
 
-@app.route("/coolbluescraper/<username>/<password>")
-def appStartCool(username, password):
+@app.route("/coolbluescraper/", methods=['POST'])
+def appStartCool():
+    data = request.data.decode("utf-8") 
+    data = json.loads(data)
     try:
-        scrapeCool(username, password)
+        scrapeCool(data['username'], data['password'])
         return jsonify({'success': True})
     except:
         return jsonify({'success': False})
