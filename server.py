@@ -29,7 +29,7 @@ def appStartCool():
     data = request.data.decode("utf-8") 
     data = json.loads(data)
     try:
-        scrapeCool(data['username'], data['password'])
+        scrapeCool(data['username'], data['password'], data['userId'])
         return jsonify({'success': True})
     except:
         return jsonify({'success': False})

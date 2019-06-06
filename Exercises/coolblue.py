@@ -1,31 +1,33 @@
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
+import requests
 import time
 from os import path, getcwd
 import os
 import uuid
 
-id = str(uuid.uuid4())
+def scrapeCool(user, pwd, userId):
+    id = str(uuid.uuid4())
+    count = 0
+    base_dir= getcwd() + '\\invoices\\coolblue\\' + id + '\\'
+    print(base_dir)
 
-base_dir= getcwd() + '\\invoices\\coolblue\\' + id + '\\'
-print(base_dir)
+    profile = webdriver.FirefoxProfile()
+    profile.set_preference("browser.download.dir",base_dir)
+    profile.set_preference("browser.download.folderList",2)
+    profile.set_preference("browser.helperApps.neverAsk.saveToDisk", "text/plain,text/x-csv,text/csv,application/vnd.ms-excel,application/csv,application/x-csv,text/csv,text/comma-separated-values,text/x-comma-separated-values,text/tab-separated-values,application/pdf")
+    profile.set_preference("browser.download.manager.showWhenStarting",False)
+    profile.set_preference("browser.helperApps.neverAsk.openFile","text/plain,text/x-csv,text/csv,application/vnd.ms-excel,application/csv,application/x-csv,text/csv,text/comma-separated-values,text/x-comma-separated-values,text/tab-separated-values,application/pdf")
+    profile.set_preference("browser.helperApps.alwaysAsk.force", False)
+    profile.set_preference("browser.download.manager.useWindow", False)
+    profile.set_preference("browser.download.manager.focusWhenStarting", False)
+    profile.set_preference("browser.helperApps.neverAsk.openFile", "")
+    profile.set_preference("browser.download.manager.alertOnEXEOpen", False)
+    profile.set_preference("browser.download.manager.showAlertOnComplete", False)
+    profile.set_preference("browser.download.manager.closeWhenDone", True)
+    profile.set_preference("pdfjs.disabled", True)
 
-profile = webdriver.FirefoxProfile()
-profile.set_preference("browser.download.dir",base_dir)
-profile.set_preference("browser.download.folderList",2)
-profile.set_preference("browser.helperApps.neverAsk.saveToDisk", "text/plain,text/x-csv,text/csv,application/vnd.ms-excel,application/csv,application/x-csv,text/csv,text/comma-separated-values,text/x-comma-separated-values,text/tab-separated-values,application/pdf")
-profile.set_preference("browser.download.manager.showWhenStarting",False)
-profile.set_preference("browser.helperApps.neverAsk.openFile","text/plain,text/x-csv,text/csv,application/vnd.ms-excel,application/csv,application/x-csv,text/csv,text/comma-separated-values,text/x-comma-separated-values,text/tab-separated-values,application/pdf")
-profile.set_preference("browser.helperApps.alwaysAsk.force", False)
-profile.set_preference("browser.download.manager.useWindow", False)
-profile.set_preference("browser.download.manager.focusWhenStarting", False)
-profile.set_preference("browser.helperApps.neverAsk.openFile", "")
-profile.set_preference("browser.download.manager.alertOnEXEOpen", False)
-profile.set_preference("browser.download.manager.showAlertOnComplete", False)
-profile.set_preference("browser.download.manager.closeWhenDone", True)
-profile.set_preference("pdfjs.disabled", True)
 
-def scrapeCool(user, pwd):
     driver = webdriver.Firefox(firefox_profile=profile, executable_path='C:/Users/tymo.dekock/Documents/Stage/Gecko/geckodriver.exe')
     driver.get('https://www.coolblue.be/nl/inloggen')
     time.sleep(3)
@@ -55,12 +57,24 @@ def scrapeCool(user, pwd):
                 modalelem = driver.find_element_by_partial_link_text("Factuur")
                 modalelem.click()
                 modalelem.send_keys(Keys.ESCAPE)
+                count +=1
             next = driver.find_element_by_partial_link_text("Volgende")
             next.click()
             time.sleep(5)
         except:
             print('Closing...')
             driver.close()
+            print('trying to access filenames')
+            print(base_dir)
+            filenames = os.listdir(base_dir)
+            multi_files = {}
+            for i in range(0, count):
+                location = base_dir+filenames[i]
+                print(location)
+                multi_files['file'+str(i+1)] = open(location, 'rb')
+                #onefile =open(location, 'rb')
+                
+            requests.post('http://localhost:8080/files/pdfstore', files=multi_files, data={'userId': userId, 'Platform': 'Coolblue'})
 
 
 
