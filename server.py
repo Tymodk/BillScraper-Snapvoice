@@ -3,7 +3,7 @@ import json
 
 from Exercises.bol import scrapeBol
 from Exercises.coolblue import scrapeCool
-
+from Exercises.github import scrapeGit
 from dateutil.relativedelta import relativedelta
 import datetime
 
@@ -33,6 +33,17 @@ def appStartCool():
         return jsonify({'success': True})
     except:
         return jsonify({'success': False})
+
+@app.route("/githubscraper/", methods=['POST'])
+def appStartGit():
+    data = request.data.decode("utf-8") 
+    data = json.loads(data)
+    try:
+        scrapeGit(data['username'], data['password'], data['userId'], data['key'])
+        return jsonify({'success': True})
+    except:
+        return jsonify({'success': False})
+
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5002)

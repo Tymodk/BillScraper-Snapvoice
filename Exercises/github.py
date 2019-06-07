@@ -5,14 +5,21 @@ import time
 from os import path, getcwd
 import os
 import uuid
+from base64 import b64decode
+from Crypto.Cipher import AES
 
-def scrapeBol(user, pwd, userId):
+def scrapeGit(user, pwd, userId, key):
     id = str(uuid.uuid4())
-    base_dir= getcwd() + '\\invoices\\bol.com\\' + id + '\\'
+    base_dir= getcwd() + '\\invoices\\github\\' + id + '\\'
     print(base_dir)
+    iv = 'asdfasdfasdfasdf'
+    encoded = b64decode(pwd)
+    print(key)
+    dec = AES.new(key=key, mode=AES.MODE_CBC, IV=iv)
+    value = dec.decrypt(encoded)
+    print(str(value.decode("utf-8")))
 
-
-    profile = webdriver.FirefoxProfile()
+'''    profile = webdriver.FirefoxProfile()
     profile.set_preference("browser.download.dir",base_dir)
     profile.set_preference("browser.download.folderList",2)
     profile.set_preference("browser.helperApps.neverAsk.saveToDisk", "text/plain,text/x-csv,text/csv,application/vnd.ms-excel,application/csv,application/x-csv,text/csv,text/comma-separated-values,text/x-comma-separated-values,text/tab-separated-values,application/pdf")
@@ -69,3 +76,4 @@ def scrapeBol(user, pwd, userId):
         #onefile =open(location, 'rb')
         
     requests.post('http://localhost:8080/files/pdfstore', files=multi_files, data={'userId': userId, 'Platform': 'Bol.com'})
+'''
