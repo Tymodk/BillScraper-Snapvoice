@@ -5,13 +5,20 @@ import time
 from os import path, getcwd
 import os
 import uuid
+from base64 import b64decode
+from Crypto.Cipher import AES
 
-def scrapeCool(user, pwd, userId):
+def scrapeCool(user, pwd, userId, key):
     id = str(uuid.uuid4())
-    count = 0
     base_dir= getcwd() + '\\invoices\\coolblue\\' + id + '\\'
     print(base_dir)
+    iv = 'asdfasdfasdfasdf'
+    encoded = b64decode(pwd)
+    dec = AES.new(key=key, mode=AES.MODE_CBC, IV=iv)
+    value = dec.decrypt(encoded)
+    pwd = str(value.decode("utf-8").replace('╗', '').replace('╔', '').replace('','').replace('', ''))
 
+    count = 0
     profile = webdriver.FirefoxProfile()
     profile.set_preference("browser.download.dir",base_dir)
     profile.set_preference("browser.download.folderList",2)
@@ -41,6 +48,8 @@ def scrapeCool(user, pwd, userId):
     for i in range(0, len(pwd)):
         elem.send_keys(pwd[i])
         time.sleep(0.25)
+    time.sleep(3)
+
     elems = driver.find_elements_by_class_name("button--order")
     elems[1].click()
 

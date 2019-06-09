@@ -5,11 +5,18 @@ import time
 from os import path, getcwd
 import os
 import uuid
+from base64 import b64decode
+from Crypto.Cipher import AES
 
-def scrapeBol(user, pwd, userId):
+def scrapeBol(user, pwd, userId, key):
     id = str(uuid.uuid4())
     base_dir= getcwd() + '\\invoices\\bol.com\\' + id + '\\'
     print(base_dir)
+    iv = 'asdfasdfasdfasdf'
+    encoded = b64decode(pwd)
+    dec = AES.new(key=key, mode=AES.MODE_CBC, IV=iv)
+    value = dec.decrypt(encoded)
+    pwd = str(value.decode("utf-8")).replace('╗', '').replace('╔', '').replace('','').replace('', '')
 
 
     profile = webdriver.FirefoxProfile()

@@ -8,9 +8,9 @@ import uuid
 from base64 import b64decode
 from Crypto.Cipher import AES
 
-def scrapeGit(user, pwd, userId, key):
+def scrapeOcean(user, pwd, userId, key):
     id = str(uuid.uuid4())
-    base_dir= getcwd() + '\\invoices\\github\\' + id + '\\'
+    base_dir= getcwd() + '\\invoices\\digitalocean\\' + id + '\\'
     print(base_dir)
     iv = 'asdfasdfasdfasdf'
     encoded = b64decode(pwd)
@@ -34,38 +34,31 @@ def scrapeGit(user, pwd, userId, key):
     profile.set_preference("pdfjs.disabled", True)
     count = 0
     driver = webdriver.Firefox(firefox_profile=profile, executable_path='C:/Users/tymo.dekock/Documents/Stage/Gecko/geckodriver.exe')
-    driver.get('https://github.com/login')
-    time.sleep(3)
-    assert "Sign in to GitHub · GitHub" in driver.title    
-    elem = driver.find_element_by_id("login_field")
+    driver.get("https://cloud.digitalocean.com/login")
+    assert "DigitalOcean" in driver.title
+    elem = driver.find_element_by_id("user_email")
     for i in range(0, len(user)):
         elem.send_keys(user[i])
         time.sleep(0.15)
-    elem = driver.find_element_by_id("password")
+    elem = driver.find_element_by_id("user_password")
     for i in range(0, len(pwd)):
         elem.send_keys(pwd[i])
         time.sleep(0.15)
-    elem = driver.find_element_by_class_name("btn-primary")
-    elem.click()
-    driver.get('https://github.com/settings/organizations')
-    elems = driver.find_elements_by_xpath('//strong[@class="ml-1"]')
-    orgs = []
+    elem.send_keys(Keys.RETURN)
+    time.sleep(3)
+    driver.get("https://cloud.digitalocean.com/account/billing")
+    time.sleep(10)
+    assert "DigitalOcean - Account" in driver.title
+    print(driver.current_url)
+    elems = driver.find_elements_by_partial_link_text("PDF")
+    
     for elem in elems:
-        orgs.append(elem.text)
-
-    for org in orgs:
-         driver.get('https://github.com/organizations/'+ org + '/billing/history')
-         try:
-            time.sleep(1)
-            assert "Payment history" in driver.title
-            elemstwo = driver.find_elements_by_class_name('receipt')
-            for elemtwo in elemstwo:
-                elemtwo.click()
-                count += 1
-                time.sleep(0.5)
-         except: 
-            print('Not a biller in this org')
+        elem.click()
+        count += 1
+        time.sleep(0.5)
+        
     driver.close()
+    time.sleep(5)
     print('trying to access filenames')
     print(base_dir)
     filenames = os.listdir(base_dir)
@@ -76,4 +69,4 @@ def scrapeGit(user, pwd, userId, key):
         multi_files['file'+str(i+1)] = open(location, 'rb')
         #onefile =open(location, 'rb')
         
-    requests.post('http://localhost:8080/files/pdfstore', files=multi_files, data={'userId': userId, 'Platform': 'Github'})
+    requests.post('http://localhost:8080/files/pdfstore', files=multi_files, data={'userId': userId, 'Platform': 'DigitalOcean'})

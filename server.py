@@ -4,6 +4,9 @@ import json
 from Exercises.bol import scrapeBol
 from Exercises.coolblue import scrapeCool
 from Exercises.github import scrapeGit
+from Exercises.telenet import scrapeTelenet
+from Exercises.ocean import scrapeOcean
+
 from dateutil.relativedelta import relativedelta
 import datetime
 
@@ -19,7 +22,7 @@ def appStartBol():
     data = request.data.decode("utf-8") 
     data = json.loads(data)
     try:
-        scrapeBol(data['username'], data['password'], data['userId'])      
+        scrapeBol(data['username'], data['password'], data['userId'], data['key'])      
         return jsonify({'success': True})
     except:
         return jsonify({'success': False})
@@ -29,7 +32,7 @@ def appStartCool():
     data = request.data.decode("utf-8") 
     data = json.loads(data)
     try:
-        scrapeCool(data['username'], data['password'], data['userId'])
+        scrapeCool(data['username'], data['password'], data['userId'], data['key'])
         return jsonify({'success': True})
     except:
         return jsonify({'success': False})
@@ -43,6 +46,27 @@ def appStartGit():
         return jsonify({'success': True})
     except:
         return jsonify({'success': False})
+
+@app.route("/telenetscraper/", methods=['POST'])
+def appStartTelenet():
+    data = request.data.decode("utf-8") 
+    data = json.loads(data)
+    try:
+        scrapeTelenet(data['username'], data['password'], data['userId'], data['key'])
+        return jsonify({'success': True})
+    except:
+        return jsonify({'success': False})
+
+@app.route("/digitaloceanscraper/", methods=['POST'])
+def appStartOcean():
+    data = request.data.decode("utf-8") 
+    data = json.loads(data)
+    scrapeOcean(data['username'], data['password'], data['userId'], data['key'])
+    return jsonify({'success': True})
+
+
+
+
 
 
 if __name__ == "__main__":
