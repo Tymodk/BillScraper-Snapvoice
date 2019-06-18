@@ -16,7 +16,7 @@ def scrapeGit(user, pwd, userId, key):
     encoded = b64decode(pwd)
     dec = AES.new(key=key, mode=AES.MODE_CBC, IV=iv)
     value = dec.decrypt(encoded)
-    pwd = str(value.decode("utf-8")).replace('╗', '').replace('╔', '').replace('','').replace('', '')
+    pwd = str(value.decode("utf-8")).replace('╗', '').replace('╔', '').replace('','').replace('', '').replace('', '').replace('', '')
 
     profile = webdriver.FirefoxProfile()
     profile.set_preference("browser.download.dir",base_dir)

@@ -16,8 +16,8 @@ def scrapeTelenet(user, pwd, userId, key):
     encoded = b64decode(pwd)
     dec = AES.new(key=key, mode=AES.MODE_CBC, IV=iv)
     value = dec.decrypt(encoded)
-    pwd = str(value.decode("utf-8")).replace('╗', '').replace('╔', '').replace('','').replace('', '')
-
+    pwd = str(value.decode("utf-8")).replace('╗', '').replace('╔', '').replace('','').replace('', '').replace('', '').replace('', '')
+    print(pwd)
     profile = webdriver.FirefoxProfile()
     profile.set_preference("browser.download.dir",base_dir)
     profile.set_preference("browser.download.folderList",2)
@@ -48,6 +48,7 @@ def scrapeTelenet(user, pwd, userId, key):
         elem.send_keys(pwd[i])
         time.sleep(0.15)
     elem = driver.find_element_by_class_name("login_btn")
+    time.sleep(35)
     elem.click()
     driver.get('https://www2.telenet.be/content/www-telenet-be/nl/klantenservice/raadpleeg-je-aanrekening')
     time.sleep(3)

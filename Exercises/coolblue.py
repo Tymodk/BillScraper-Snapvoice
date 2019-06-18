@@ -16,7 +16,7 @@ def scrapeCool(user, pwd, userId, key):
     encoded = b64decode(pwd)
     dec = AES.new(key=key, mode=AES.MODE_CBC, IV=iv)
     value = dec.decrypt(encoded)
-    pwd = str(value.decode("utf-8").replace('╗', '').replace('╔', '').replace('','').replace('', ''))
+    pwd = str(value.decode("utf-8").replace('╗', '').replace('╔', '').replace('','').replace('', '').replace('', '').replace('', ''))
 
     count = 0
     profile = webdriver.FirefoxProfile()
